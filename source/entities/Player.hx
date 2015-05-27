@@ -30,10 +30,20 @@ class Player extends FlxSprite
     if (FlxG.keys.anyPressed(["LEFT", "A"]))
     {
       acceleration.x = -maxVelocity.x * 4;
+
+      if (isTouching(FlxObject.LEFT))
+      {
+        velocity.y = maxVelocity.y * 0.25;
+      }
     }
     if (FlxG.keys.anyPressed(["RIGHT", "D"]))
     {
       acceleration.x = maxVelocity.x * 4;
+
+      if (isTouching(FlxObject.RIGHT))
+      {
+        velocity.y = maxVelocity.y * 0.25;
+      }
     }
 
     if (FlxG.keys.anyPressed(["SPACE", "W", "UP"]))
