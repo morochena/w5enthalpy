@@ -21,6 +21,8 @@ class MenuState extends FlxState
 	 */
 	override public function create():Void
 	{
+		var background = new FlxSprite("assets/images/titlescreen.png");
+		add(background);
 		_btnPlay = new FlxButton(0, 0, "Play", clickPlay);
 		_btnPlay.screenCenter();
 		add(_btnPlay);

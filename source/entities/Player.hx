@@ -59,7 +59,6 @@ class Player extends FlxSprite
         acceleration.y = gravity * 4;
     }
 
-
     super.update();
   }
 }
