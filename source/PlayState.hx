@@ -10,6 +10,7 @@ import flixel.tile.FlxTilemap;
 import openfl.Assets;
 
 import entities.Player;
+import entities.EnemyNinja;
 
 
 /**
@@ -18,12 +19,16 @@ import entities.Player;
 class PlayState extends FlxState
 {
 	private var _player:Player;
+	private var _enemy:EnemyNinja;
 	private var _level:FlxTilemap;
 
 	override public function create():Void
 	{
 		_player = new Player(60, 40);
 		add(_player);
+
+		_enemy = new EnemyNinja(320, 400, _player);
+		add(_enemy);
 
 		_level = new FlxTilemap();
 		_level.loadMap(Assets.getText("assets/data/level1.csv"), "assets/images/tileset.png", 32, 32, 0, 1);
@@ -47,5 +52,6 @@ class PlayState extends FlxState
 	{
 		FlxG.collide();
 		super.update();
+
 	}
 }
