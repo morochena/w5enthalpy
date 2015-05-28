@@ -3,21 +3,19 @@ package entities.weapons;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
 import flixel.FlxObject;
+import flixel.util.FlxPoint;
 
 
 class Bullet extends FlxSprite
 {
   private var _speed:Float;
-  private var _direction:Int;
   private var _damage:Float;
 
-  public function new(X:Float, Y:Float, Speed:Float, Direction:Int,Damage:Float)
+  public function new()
   {
-    super(X, Y);
-    _speed = Speed;
-    _direction = Direction;
-    _damage = Damage;
+    super();
     makeGraphic(6, 6, FlxColor.YELLOW);
+    exists = false;
   }
 
   public override function destroy():Void
@@ -27,18 +25,6 @@ class Bullet extends FlxSprite
 
   public override function update():Void
   {
-    if (_direction == FlxObject.LEFT){
-      velocity.x = -_speed;
-    }
-    if (_direction == FlxObject.RIGHT){
-      velocity.x = _speed;
-    }
-    if (_direction == FlxObject.FLOOR){
-      velocity.y = _speed;
-    }
-    if (_direction == FlxObject.CEILING){
-      velocity.y = -_speed;
-    }
 
     if (touching != 0)
     {
@@ -49,5 +35,15 @@ class Bullet extends FlxSprite
       super.update();
     }
 
+  }
+
+  public function shoot(X:Int, Y:Int, Target:FlxPoint):Void
+  {
+    _speed = 900;
+    super.reset(X, Y);
+    solid = true;
+    var rangle:Float = Math.atan2(Target.y - (y + (height / 2)), Target.x - (x + (width / 2)));
+    velocity.x = Math.cos(rangle) * _speed;
+    velocity.y = Math.sin(rangle) * _speed;
   }
 }

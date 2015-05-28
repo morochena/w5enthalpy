@@ -10,10 +10,8 @@ import flixel.tile.FlxTilemap;
 import openfl.Assets;
 import flixel.group.FlxGroup;
 import flixel.group.FlxTypedGroup;
-
 import entities.Player;
 import entities.EnemyNinja;
-
 import entities.weapons.Bullet;
 
 
@@ -32,6 +30,13 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		playerBullets = new FlxTypedGroup<Bullet>();
+		playerBullets.maxSize = 4;
+
+		for (i in 0...4)
+		{
+			playerBullets.add(new Bullet());
+		}
+
 		add(playerBullets);
 
 		_player = new Player(60, 40, playerBullets);

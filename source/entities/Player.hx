@@ -5,6 +5,7 @@ import flixel.util.FlxColor;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.group.FlxTypedGroup;
+import flixel.util.FlxPoint;
 
 import entities.weapons.Bullet;
 
@@ -13,8 +14,11 @@ class Player extends FlxSprite
   public var run_speed:Float = 300;
   public var jump_speed:Float = 300;
   public var gravity:Float = 420;
+  public var gun_delay:Float = 0.4;
 
   private var _bulletArray:FlxTypedGroup<Bullet>;
+  private var _bullet:Bullet;
+  private var _shotCooldown:Float;
 
   public function new(X:Float=0, Y:Float=0, playerBulletArray:FlxTypedGroup<Bullet>)
   {
@@ -26,6 +30,7 @@ class Player extends FlxSprite
     drag.x = maxVelocity.x * 4;
 
     _bulletArray = playerBulletArray;
+    _shotCooldown = gun_delay;
 
   }
 
@@ -34,6 +39,15 @@ class Player extends FlxSprite
     acceleration.x = 0;
     acceleration.y = gravity;
 
+    handleInput();
+
+    _shotCooldown += FlxG.elapsed;
+
+    super.update();
+  }
+
+  private function handleInput():Void
+  {
     if (FlxG.keys.anyPressed(["LEFT", "A"]))
     {
       acceleration.x = -maxVelocity.x * 4;
@@ -73,21 +87,31 @@ class Player extends FlxSprite
 
     if (FlxG.keys.anyPressed(["S", "DOWN"]))
     {
-        acceleration.y = gravity * 4;
+      acceleration.y = gravity * 4;
     }
 
-    if (FlxG.keys.anyPressed(["X"]))
+    if (FlxG.mouse.pressed)
     {
       attack();
     }
-
-    super.update();
   }
 
   private function attack():Void
   {
-    var newBullet = new Bullet(x + 32, y+15, 500, FlxObject.RIGHT, 10);
-    _bulletArray.add(newBullet);
+    if (_shotCooldown >= gun_delay)
+    {
+      _bullet = _bulletArray.recycle(Bullet);
+
+      if(_bullet != null)
+      {
+        var mouseLoc:FlxPoint = new FlxPoint();
+        mouseLoc.x = FlxG.mouse.x;
+        mouseLoc.y = FlxG.mouse.y;
+        _bullet.shoot(Math.floor(x), Math.floor(y), mouseLoc);
+        FlxG.sound.play("assets/sounds/laser_shoot.wav", 1, false);
+        _shotCooldown = 0;
+      }
+    }
   }
 
 }
