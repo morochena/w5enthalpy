@@ -4,6 +4,9 @@ import flixel.FlxSprite;
 import flixel.util.FlxColor;
 import flixel.FlxG;
 import flixel.FlxObject;
+import flixel.group.FlxTypedGroup;
+
+import entities.weapons.Bullet;
 
 class Player extends FlxSprite
 {
@@ -11,7 +14,9 @@ class Player extends FlxSprite
   public var jump_speed:Float = 300;
   public var gravity:Float = 420;
 
-  public function new(X:Float=0, Y:Float=0)
+  private var _bulletArray:FlxTypedGroup<Bullet>;
+
+  public function new(X:Float=0, Y:Float=0, playerBulletArray:FlxTypedGroup<Bullet>)
   {
     super(X, Y);
     makeGraphic(16, 16, FlxColor.BLUE);
@@ -19,6 +24,8 @@ class Player extends FlxSprite
     maxVelocity.set(run_speed, jump_speed);
     acceleration.y = gravity; // gravity
     drag.x = maxVelocity.x * 4;
+
+    _bulletArray = playerBulletArray;
 
   }
 
@@ -69,6 +76,18 @@ class Player extends FlxSprite
         acceleration.y = gravity * 4;
     }
 
+    if (FlxG.keys.anyPressed(["X"]))
+    {
+      attack();
+    }
+
     super.update();
   }
+
+  private function attack():Void
+  {
+    var newBullet = new Bullet(x + 32, y+15, 500, FlxObject.RIGHT, 10);
+    _bulletArray.add(newBullet);
+  }
+
 }
